@@ -1,37 +1,18 @@
-import {
-  ActivityIndicator,
-  FlatList,
-  ListRenderItem,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native'
-import { Link, Stack } from 'expo-router'
-import React from 'react'
-
-// import {renderItem} from '../../../components/orderRenderItem'
-import { ORDERS } from '../../../../assets/orders'
-import { Tables } from '../../../types/database.types'
+import { ListRenderItem, Pressable, StyleSheet, Text, View } from 'react-native'
+import { Link } from 'expo-router'
 import { format } from 'date-fns'
-import { Order, OrderStatus } from '../../../../assets/types/order'
 
-const statusDisplayText: Record<OrderStatus, string> = {
-  Pending: 'Pending',
-  Shipped: 'Shipped',
-  Completed: 'Completed',
-  InTransit: 'In Transit',
-}
+import { Tables } from '../types/database.types'
 
-const renderItem: ListRenderItem<Order> = ({ item }) => (
+export const renderItem: ListRenderItem<Tables<'order'>> = ({ item }) => (
   <Link href={`/orders/${item.slug}`} asChild>
     <Pressable style={styles.orderContainer}>
       <View style={styles.orderContent}>
         <View style={styles.orderDetailsContainer}>
-          <Text style={styles.orderItem}>{item.item}</Text>
-          <Text style={styles.orderDetails}>{item.details}</Text>
+          <Text style={styles.orderItem}>{item.slug}</Text>
+          <Text style={styles.orderDetails}>{item.description}</Text>
           <Text style={styles.orderDate}>
-            {format(new Date(item.date), 'MMM dd, yyyy')}
+            {format(new Date(item.created_at), 'MMM dd, yyyy')}
           </Text>
         </View>
         <View
@@ -44,20 +25,7 @@ const renderItem: ListRenderItem<Order> = ({ item }) => (
   </Link>
 )
 
-export default function Orders() {
-  return (
-    <View style={styles.container}>
-      <Stack.Screen options={{ title: 'Orders' }} />
-      <FlatList
-        data={ORDERS}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={renderItem}
-      />
-    </View>
-  )
-}
-
-const styles = StyleSheet.create({
+const styles: { [key: string]: any } = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
