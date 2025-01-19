@@ -4,10 +4,11 @@ import { Stack } from 'expo-router'
 import { Ionicons } from '@expo/vector-icons'
 
 export default function ProductLayout() {
+  
   return (
     <Stack>
       <Stack.Screen
-        name='index'
+        name='[slug]'
         options={({ navigation }) => ({
           headerShown: true,
           title: 'Product',
