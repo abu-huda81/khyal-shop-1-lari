@@ -4,7 +4,7 @@ import { CATEGORIES } from '../../../assets/categories'
 import ProductListItem from '../../components/product-item-list'
 import ListHeader from '../../components/list-header'
 
-export default function Page() {
+export default function Home() {
   return (
     <View>
       <FlatList
