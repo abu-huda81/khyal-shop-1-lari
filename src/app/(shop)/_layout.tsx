@@ -1,13 +1,19 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { ActivityIndicator, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
-import { Tabs } from 'expo-router'
+import { Redirect, Tabs } from 'expo-router'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { FontAwesome } from '@expo/vector-icons'
+import { useAuth } from '../../providers/auth-provider'
 
 function TabBarIcon(props: {
+  
   name: React.ComponentProps<typeof FontAwesome>['name']
   color: string
 }) {
+    const { session, mounting } = useAuth()
+
+    if (mounting) return <ActivityIndicator />
+    if (!session) return <Redirect href='/auth' />
   return (
     <FontAwesome
       size={28}

@@ -3,8 +3,11 @@ import { PRODUCTS } from '../../../assets/products'
 import { CATEGORIES } from '../../../assets/categories'
 import ProductListItem from '../../components/product-item-list'
 import ListHeader from '../../components/list-header'
+import { useAuth } from '../../providers/auth-provider'
 
 export default function Home() {
+  const {user} = useAuth()
+  console.log(user)
   return (
     <View>
       <FlatList
@@ -36,3 +39,5 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
   },
 })
+
+

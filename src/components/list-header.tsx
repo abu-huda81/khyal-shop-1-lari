@@ -11,11 +11,12 @@ import {
 import { FontAwesome } from '@expo/vector-icons'
 import { Category } from '../../assets/types/category'
 import { useCartStore } from '../store/cart-store'
+import { supabase } from '../lib/supabase'
 
 export default function ListHeader({ categories }: { categories: Category[] }) {
   const { getItemCount } = useCartStore()
   const handleSignOut = async () => {
-    // await supabase.auth.signOut()
+    await supabase.auth.signOut()
   }
   return (
     <View style={[styles.headerContainer]}>
