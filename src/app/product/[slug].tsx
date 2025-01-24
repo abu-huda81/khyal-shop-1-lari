@@ -6,69 +6,75 @@ import {
   Text,
   TouchableOpacity,
   View,
-  ActivityIndicator
 } from 'react-native'
 import { useToast } from 'react-native-toast-notifications'
 import { useState } from 'react'
 
 import { useCartStore } from '../../store/cart-store'
-import { PRODUCTS } from '../../../assets/products'
+import { getProduct } from '../../api/api'
+import { ActivityIndicator } from 'react-native'
 
-export default function ProductDetails() {
-    const { slug } = useLocalSearchParams<{ slug: string }>()
-    const toast = useToast()
-    const product = PRODUCTS.find(product => product.slug === slug)
-    if (!product) return <Redirect href='/404' />
+const ProductDetails = () => {
+  const { slug } = useLocalSearchParams<{ slug: string }>()
+  const toast = useToast()
 
-    const { items, addItem, incrementItem, decrementItem } = useCartStore()
-     const cartItem = items.find((item) => item.id === product?.id)
+  const { data: product, error, isLoading } = getProduct(slug)
 
-    const initialQuantity = cartItem ? cartItem.quantity : 0
-    const [quantity, setQuantity] = useState(initialQuantity)
+  const { items, addItem, incrementItem, decrementItem } = useCartStore()
 
-      const increaseQuantity = () => {
-        if (quantity < product.maxQuantity) {
-          setQuantity((prev) => prev + 1)
-          incrementItem(product.id)
-        } else {
-          toast.show('Cannot add more than maximum quantity', {
-            type: 'warning',
-            placement: 'top',
-            duration: 1500,
-          })
-        }
-      }
+  const cartItem = items.find((item) => item.id === product?.id)
 
-      const decreaseQuantity = () => {
-        if (quantity > 1) {
-          setQuantity((prev) => prev - 1)
-          decrementItem(product.id)
-        }
-      }
+  const initialQuantity = cartItem ? cartItem.quantity : 0
 
-      const addToCart = () => {
-        addItem({
-          id: product.id,
-          title: product.title,
-          heroImage: product.heroImage as string,
-          price: product.price,
-          quantity,
-          maxQuantity: product.maxQuantity,
-        })
-        toast.show('Added to cart', {
-          type: 'success',
-          placement: 'top',
-          duration: 1500,
-        })
-      }
+  const [quantity, setQuantity] = useState(initialQuantity)
 
-      const totalPrice = (product.price * quantity).toFixed(2)
+  if (isLoading) return <ActivityIndicator />
+  if (error) return <Text>Error: {error.message}</Text>
+  if (!product) return <Redirect href='/404' />
+
+  const increaseQuantity = () => {
+    if (quantity < product.maxQuantity) {
+      setQuantity((prev) => prev + 1)
+      incrementItem(product.id)
+    } else {
+      toast.show('Cannot add more than maximum quantity', {
+        type: 'warning',
+        placement: 'top',
+        duration: 1500,
+      })
+    }
+  }
+
+  const decreaseQuantity = () => {
+    if (quantity > 1) {
+      setQuantity((prev) => prev - 1)
+      decrementItem(product.id)
+    }
+  }
+
+  const addToCart = () => {
+    addItem({
+      id: product.id,
+      title: product.title,
+      heroImage: product.heroImage,
+      price: product.price,
+      quantity,
+      maxQuantity: product.maxQuantity,
+    })
+    toast.show('Added to cart', {
+      type: 'success',
+      placement: 'top',
+      duration: 1500,
+    })
+  }
+
+  const totalPrice = (product.price * quantity).toFixed(2)
 
   return (
     <View style={styles.container}>
       <Stack.Screen options={{ title: product.title }} />
 
-      <Image source={product.heroImage } style={styles.heroImage} />
+      <Image source={{ uri: product.heroImage }} style={styles.heroImage} />
 
       <View style={{ padding: 16, flex: 1 }}>
         <Text style={styles.title}>Title: {product.title}</Text>
@@ -84,7 +90,7 @@ export default function ProductDetails() {
           data={product.imagesUrl}
           keyExtractor={(item, index) => index.toString()}
           renderItem={({ item }) => (
-            <Image source={ item } style={styles.image} />
+            <Image source={{ uri: item }} style={styles.image} />
           )}
           horizontal
           showsHorizontalScrollIndicator={false}
@@ -125,6 +131,8 @@ export default function ProductDetails() {
     </View>
   )
 }
+
+export default ProductDetails
 
 const styles = StyleSheet.create({
   container: {

@@ -7,22 +7,28 @@ import {
   View,
 } from 'react-native'
 import { Redirect, Stack, useLocalSearchParams } from 'expo-router'
-import ProductListItem from '../../components/product-item-list'
-import { CATEGORIES } from '../../../assets/categories'
-import { PRODUCTS } from '../../../assets/products'
 
-export default function Categories() {
+import  ProductListItem  from '../../components/product-item-list'
+import { getCategoryAndProducts } from '../../api/api'
+
+const Category = () => {
   const { slug } = useLocalSearchParams<{ slug: string }>()
-  const category = CATEGORIES.find((category) => category.slug === slug)
-  if (!category) return <Redirect href='/404' />
-  const products = PRODUCTS.filter((product) => product.category.slug === slug)
+
+  const { data, error, isLoading } = getCategoryAndProducts(slug)
+
+  if (isLoading) return <ActivityIndicator />
+  if (error || !data) return <Text>Error: {error?.message}</Text>
+  if (!data.category || !data.products) return <Redirect href='/404' />
+
+  const { category, products } = data
+
   return (
     <View style={styles.container}>
       <Stack.Screen options={{ title: category.name }} />
       <Image source={{ uri: category.imageUrl }} style={styles.categoryImage} />
       <Text style={styles.categoryName}>{category.name}</Text>
       <FlatList
-        data={products}
+        data={data.products}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => <ProductListItem product={item} />}
         numColumns={2}
@@ -32,6 +38,8 @@ export default function Categories() {
     </View>
   )
 }
+
+export default Category
 
 const styles = StyleSheet.create({
   container: {

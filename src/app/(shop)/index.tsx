@@ -1,23 +1,34 @@
-import { FlatList, StyleSheet, Text, View } from 'react-native'
+import {
+  ActivityIndicator,
+  FlatList,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native'
 import { PRODUCTS } from '../../../assets/products'
 import { CATEGORIES } from '../../../assets/categories'
 import ProductListItem from '../../components/product-item-list'
 import ListHeader from '../../components/list-header'
-import { useAuth } from '../../providers/auth-provider'
+
+import { getProductsAndCategories } from '../../api/api'
 
 export default function Home() {
-  const {user} = useAuth()
-  console.log(user)
+  const { data, error, isLoading } = getProductsAndCategories()
+  // imkyaighjasmxaszutvq
+  if (isLoading) return <ActivityIndicator />
+
+  if (error || !data)
+    return <Text>Error {error?.message || 'An error occured'}</Text>
   return (
     <View>
       <FlatList
-        data={PRODUCTS}
+        data={data.products}
         renderItem={({ item, index, separators }) => (
           <ProductListItem product={item} />
         )}
         keyExtractor={(item) => item.id.toString()}
         numColumns={2}
-        ListHeaderComponent={<ListHeader categories={CATEGORIES} />}
+        ListHeaderComponent={<ListHeader categories={data.categories} />}
         contentContainerStyle={styles.FlatListContent}
         columnWrapperStyle={styles.FlatListColumnWrapper}
         style={styles.FlatList}
@@ -39,5 +50,3 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
   },
 })
-
-

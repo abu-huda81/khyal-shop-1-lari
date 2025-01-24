@@ -9,11 +9,14 @@ import {
   View,
 } from 'react-native'
 import { FontAwesome } from '@expo/vector-icons'
-import { Category } from '../../assets/types/category'
+// import { Category } from '../../assets/types/category'
 import { useCartStore } from '../store/cart-store'
 import { supabase } from '../lib/supabase'
+import { Tables } from '../types/database.types'
 
-export default function ListHeader({ categories }: { categories: Category[] }) {
+export default function ListHeader({ categories }: { categories: Tables<'category'>[
+
+] }) {
   const { getItemCount } = useCartStore()
   const handleSignOut = async () => {
     await supabase.auth.signOut()

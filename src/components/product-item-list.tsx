@@ -1,14 +1,15 @@
 import { Pressable, StyleSheet, Text, View, Image } from 'react-native'
-import { Product } from '../../assets/types/product'
+// import { Product } from '../../assets/types/product'
 import { Link } from 'expo-router'
+import { Tables } from '../types/database.types'
 
-export default function ProductListItem({ product }: { product: Product }) {
+export default function ProductListItem({ product }: { product: Tables<'product'> }) {
   return (
     <Link asChild href={`/product/${product.slug}`}>
       <Pressable style={styles.item}>
         <View style={styles.itemImageContainer}>
           <Image
-            source={product.heroImage}
+            source={{ uri: product.heroImage || require('../../assets/logo.png') }}
             style={styles.itemImage}
           />
         </View>
