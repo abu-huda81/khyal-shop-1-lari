@@ -11,6 +11,7 @@ import {
 import { useCartStore } from '../store/cart-store'
 import { StatusBar } from 'expo-status-bar'
 import { CartItem } from '../components/cartItem'
+import { createOrder, createOrderItem } from '../api/api'
 
 export default function Cart() {
   const {
@@ -21,20 +22,54 @@ export default function Cart() {
     getTotalPrice,
     resetCart,
   } = useCartStore()
+  const { mutateAsync: createSupabaseOrder } = createOrder()
+  const { mutateAsync: createSupabaseOrderItem } = createOrderItem()
 
   const handleCheckout = async () => {
     const totalPrice = parseFloat(getTotalPrice())
 
-    if (totalPrice > 0) {
+    try {
+      // await setupStripePaymentSheet(Math.floor(totalPrice * 100))
+
+      // const result = await openStripeCheckout()
+
+      // if (!result) {
+      //   Alert.alert('An error occurred while processing the payment')
+      //   return
+      // }
+
+      await createSupabaseOrder(
+        { totalPrice },
+        {
+          onSuccess: (data) => {
+            createSupabaseOrderItem(
+              items.map((item) => ({
+                orderId: data.id,
+                productId: item.id,
+                quantity: item.quantity,
+              })),
+              {
+                onSuccess: () => {
+                  alert('Order created successfully')
+                  resetCart()
+                },
+              }
+            )
+          },
+        }
+      )
+    } catch (error) {
+      console.error(error)
+      alert('An error occurred while creating the order')
     }
   }
   return (
-<View style={styles.container}>
+    <View style={styles.container}>
       <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
 
       <FlatList
         data={items}
-        keyExtractor={item => item.id.toString()}
+        keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
           <CartItem
             item={item}
@@ -56,8 +91,7 @@ export default function Cart() {
         </TouchableOpacity>
       </View>
     </View>
-  );
-  
+  )
 }
 
 const styles = StyleSheet.create({

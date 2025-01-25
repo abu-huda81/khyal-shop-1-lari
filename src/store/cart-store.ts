@@ -5,7 +5,7 @@ type CartItemType = {
   title: string
   heroImage: string
   price: number
-  quantity: number
+  quantity: number 
   maxQuantity: number
 }
 

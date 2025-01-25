@@ -5,7 +5,7 @@ type CartItemType = {
   title: string
   heroImage: string
   price: number
-  quantity: number
+  quantity: number 
   maxQuantity: number
 }
 
@@ -25,7 +25,7 @@ export const CartItem = ({
   return (
     <View style={styles.cartItem}>
       <Image
-        source={item.heroImage || require('../../assets/logo.png')}
+        source={{ uri: item.heroImage } }
         style={styles.itemImage}
       />
       <View style={styles.itemDetails}>

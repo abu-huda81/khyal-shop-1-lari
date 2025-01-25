@@ -49,19 +49,24 @@ export default function Auth() {
     }
   }
 
-  const signUp = async (data: zod.infer<typeof authSchema>) => {
-    const { error } = await supabase.auth.signUp(data)
-
+const signUp = async (data: zod.infer<typeof authSchema>) => {
+  try {
+    const { error } = await supabase.auth.signUp(data);
     if (error) {
-      alert(error.message)
+      console.error('Signup error:', error);
+      alert(error.message);
     } else {
       Toast.show('Signed up successfully', {
         type: 'success',
         placement: 'top',
         duration: 1500,
-      })
+      });
     }
+  } catch (error) {
+    console.error('Signup error:', error);
+    alert('An error occurred during signup');
   }
+};
 
   return (
     <ImageBackground
