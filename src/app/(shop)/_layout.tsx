@@ -25,16 +25,16 @@ function TabBarIcon(props: {
 
 export default function TabsLayout() {
   return (
-    <SafeAreaView edges={['top']} style={styles.safeArea}>
+    <SafeAreaView edges={["top"]} style={styles.safeArea}>
       <Tabs
         screenOptions={{
-          tabBarActiveTintColor: 'rgba(192, 119, 24, 0.86)',
-          tabBarInactiveTintColor: 'gray',
+          tabBarActiveTintColor: "rgba(192, 119, 24, 0.86)",
+          tabBarInactiveTintColor: "gray",
           tabBarLabelStyle: {
             fontSize: 16,
           },
           tabBarStyle: {
-            backgroundColor: 'white',
+            backgroundColor: "white",
             borderTopLeftRadius: 20,
             borderTopRightRadius: 20,
             paddingTop: 10,
@@ -43,24 +43,31 @@ export default function TabsLayout() {
         }}
       >
         <Tabs.Screen
-          name='index'
+          name="index"
           options={{
             tabBarIcon: ({ color }) => (
-              <TabBarIcon name='shopping-cart' color={color} />
+              <TabBarIcon name="shopping-cart" color={color} />
             ),
-            title: 'Shop',
+            title: "Shop",
           }}
         />
         <Tabs.Screen
-          name='orders'
+          name="orders"
           options={{
-            tabBarIcon: ({ color }) => <TabBarIcon name='book' color={color} />,
-            title: 'Orders',
+            tabBarIcon: ({ color }) => <TabBarIcon name="book" color={color} />,
+            title: "Orders",
+          }}
+        />
+        <Tabs.Screen
+          name="profile"
+          options={{
+            tabBarIcon: ({ color }) => <TabBarIcon name="user" color={color} />,
+            title: "Profile",
           }}
         />
       </Tabs>
     </SafeAreaView>
-  )
+  );
 }
 
 const styles = StyleSheet.create({

@@ -7,4 +7,5 @@ export const Colors = {
   white: "#fff",
   background: "#F4F4F4",
   highlight: "#F4CE14",
+  text: "#333", // Added text color, same as black for consistency
 };

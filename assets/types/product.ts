@@ -1,5 +1,5 @@
-import { ImageSourcePropType } from 'react-native';
-import { Category } from './category';
+import { ImageSourcePropType } from "react-native";
+import { Category } from "./category";
 
 export type Product = {
   id: number;
@@ -8,6 +8,10 @@ export type Product = {
   imagesUrl: ImageSourcePropType[];
   price: number;
   heroImage: ImageSourcePropType;
-  category: Omit<Category, 'products'>;
+  category: Omit<Category, "products">;
   maxQuantity: number;
+};
+
+export type PurchasedProduct = Product & {
+  purchaseDate: string;
 };
