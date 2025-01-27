@@ -13,7 +13,13 @@ import { FontAwesome } from '@expo/vector-icons'
 import { useCartStore } from '../store/cart-store'
 import { supabase } from '../lib/supabase'
 import { Tables } from '../types/database.types'
+import ImageSlider from './ImageSlider'
 
+const images = [
+  require('../../assets/images/slider1.png'),
+  require('../../assets/images/slider2.png'),
+  require('../../assets/images/slider3.png'),
+]
 export default function ListHeader({
   categories,
 }: {
@@ -65,10 +71,11 @@ export default function ListHeader({
         </View>
       </View>
       <View style={styles.heroContainer}>
-        <Image
+        {/* <Image
           source={require('../../assets/images/hero.png')}
           style={styles.heroImage}
-        />
+        /> */}
+        <ImageSlider imageList={images}  />
       </View>
       <View style={styles.categoriesContainer}>
         <Text style={styles.sectionTitle}>Categories</Text>
@@ -134,6 +141,9 @@ const styles = StyleSheet.create({
   heroContainer: {
     width: '100%',
     height: 200,
+    borderRadius: 20,
+    overflow: 'hidden',
+    marginBottom: 10,
   },
   heroImage: {
     width: '100%',
